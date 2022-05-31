@@ -1,0 +1,51 @@
+server:
+  port: 8080
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_DB:mongodb://localhost:27017/blog}
+      auto-index-creation: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${CLIENT_ID:81309441837-a8mhn6i0hapr1b4bbs0evkin7rv7eqst.apps.googleusercontent.com}
+            client-secret: ${CLIENT_SECRET:}
+            redirect-uri: ${BASE_URL:http://localhost:8080}/login/oauth2/code/google
+            authorization-grant-type: authorization_code
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://www.googleapis.com/oauth2/v4/token
+      resource-server:
+        jwt:
+          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+          issuer-uri: https://accounts.google.com
+          jws-algorithm: RS256
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+mongock:
+  change-logs-scan-package: asknure.narozhnyi.core.migrations
+
+#aws
+cloud:
+  aws:
+    credentials:
+      access-key: ${ACCESS_KEY:}
+      secret-key: ${SECRET_KEY:}
+    region:
+      static: eu-central-1
+    stack:
+      auto: false
+
+#bucket-name
+bucket-name: asknure-bucket
+
+
+

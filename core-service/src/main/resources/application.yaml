@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/blog
+      auto-index-creation: true
+
+search:
+  fields:
+    - title
+    - createdBy
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 802864244038-dtqvmldhe1ohmvdvkke7t6kbqnktdl0i.apps.googleusercontent.com
+            client-secret: ${CLIENT_SECRET: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}
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            authorization-grant-type: authorization_code
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://www.googleapis.com/oauth2/v4/token
+      resource-server:
+        jwt:
+          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+          issuer-uri: https://accounts.google.com
+          jws-algorithm: RS256
+
+mongock:
+  change-logs-scan-package: asknure.narozhnyi.core.migrations
+
+
+
+
+

@@ -1,0 +1,13 @@
+#aws
+cloud:
+  aws:
+    credentials:
+      access-key: ${ACCESS_KEY:}
+      secret-key: ${SECRET_KEY:}
+    region:
+      static: eu-central-1
+    stack:
+      auto: false
+
+#bucket-name
+bucket-name: asknure-bucket
