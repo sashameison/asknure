@@ -76,4 +76,11 @@ public class DatabaseChangeLog {
     update.rename("tags", "categories");
     mongockTemplate.updateMulti(Query.query(Criteria.where("_id").exists(true)), update, Post.class);
   }
+
+  @ChangeSet(order = "005", id = "updateTextField", author = "onarozhnyi")
+  public void updateTextField(MongockTemplate mongockTemplate) {
+    Update update = new Update();
+    update.set("text", "");
+    mongockTemplate.updateMulti(Query.query(Criteria.where("_id").exists(true)), update, Post.class);
+  }
 }

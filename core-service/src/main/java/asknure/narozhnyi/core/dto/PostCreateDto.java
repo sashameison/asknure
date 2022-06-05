@@ -22,6 +22,7 @@ public class PostCreateDto {
   @NotNull
   @Size(min = 2)
   private String title;
+  private String text;
   private String photo;
   @JsonProperty(value = "isAnonymous")
   private boolean isAnonymous;
