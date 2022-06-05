@@ -20,6 +20,7 @@ public class PostDto {
 
   private String id;
   private String title;
+  private String text;
   private String createdBy;
   private String color;
   private String photo;

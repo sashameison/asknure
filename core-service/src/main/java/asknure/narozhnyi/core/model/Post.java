@@ -20,6 +20,7 @@ public class Post extends AuditingEntity {
   @Id
   private String id;
   private String title;
+  private String text;
   private String color;
   private String photo;
   private List<String> files;
