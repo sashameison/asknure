@@ -86,6 +86,7 @@ public class PostService {
         .map(post -> uploadFile(post, multipartFile))
         .orElseThrow(NotFoundException::new);
   }
+
   private Post updateColor(Post post) {
     post.setColor(ColorGenerator.generateColor());
     return post;
