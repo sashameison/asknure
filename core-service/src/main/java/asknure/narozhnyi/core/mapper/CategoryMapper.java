@@ -5,7 +5,7 @@ import asknure.narozhnyi.core.dto.CategoryDto;
 import asknure.narozhnyi.core.model.Category;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface CategoryMapper {
   CategoryDto toDto(Category categoryDto);
 

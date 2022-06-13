@@ -1,5 +1,7 @@
 package asknure.narozhnyi.core.service;
 
+import static asknure.narozhnyi.core.dto.PostDto.Fields.categories;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +33,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class PostService {
 
-  private static final String COMMENTS = "comments";
   private static final String ID = "_id";
   private final PostRepository postRepository;
   private final UserService userService;
@@ -61,12 +62,6 @@ public class PostService {
         .orElseThrow(BadRequest::new);
   }
 
-  public void saveAttachment(String postId, MultipartFile multipartFile) {
-    postRepository.findPostById(postId)
-        .map(post -> uploadFile(post, multipartFile))
-        .orElseThrow(NotFoundException::new);
-  }
-
   public Comment saveComment(String postId, CommentCreateDto commentDto) {
     return Optional.of(commentDto)
         .map(commentMapper::toEntity)
@@ -86,6 +81,11 @@ public class PostService {
         .map(postMapper::toDto);
   }
 
+  public void saveAttachment(String postId, MultipartFile multipartFile) {
+    postRepository.findPostById(postId)
+        .map(post -> uploadFile(post, multipartFile))
+        .orElseThrow(NotFoundException::new);
+  }
   private Post updateColor(Post post) {
     post.setColor(ColorGenerator.generateColor());
     return post;
@@ -115,7 +115,7 @@ public class PostService {
 
   private void updatePostById(Comment comment, String postId) {
     var query = Query.query(Criteria.where(ID).is(postId));
-    var push = new Update().push(COMMENTS, comment);
+    var push = new Update().push(categories, comment);
 
     mongoTemplate.updateFirst(query, push, Post.class);
   }
