@@ -6,7 +6,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,8 +23,6 @@ public class PostCreateDto {
   private String title;
   private String text;
   private String photo;
-  @JsonProperty(value = "isAnonymous")
-  private boolean isAnonymous;
   @Builder.Default
   private List<CommentCreateDto> comments = new ArrayList<>();
   @Builder.Default

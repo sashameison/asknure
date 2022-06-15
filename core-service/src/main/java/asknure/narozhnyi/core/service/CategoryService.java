@@ -1,9 +1,11 @@
 package asknure.narozhnyi.core.service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import asknure.narozhnyi.core.dto.CategoryCreateDto;
 import asknure.narozhnyi.core.dto.CategoryDto;
+import asknure.narozhnyi.core.exceptions.BadRequest;
 import asknure.narozhnyi.core.exceptions.NotFoundException;
 import asknure.narozhnyi.core.mapper.CategoryMapper;
 import asknure.narozhnyi.core.repository.CategoryRepository;
@@ -31,6 +33,11 @@ public class CategoryService {
   }
 
   public CategoryDto save(CategoryCreateDto dto) {
+    boolean isCategoryExists = categoryRepository.findCategoryByName(dto.getName()).isPresent();
+    if (isCategoryExists) {
+      throw new BadRequest();
+    }
+
     return Optional.of(dto)
         .map(categoryMapper::toEntity)
         .map(categoryRepository::save)
