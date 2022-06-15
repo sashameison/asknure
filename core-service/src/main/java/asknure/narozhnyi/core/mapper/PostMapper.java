@@ -7,7 +7,7 @@ import asknure.narozhnyi.core.model.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface PostMapper {
   PostDto toDto(Post post);
 

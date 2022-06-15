@@ -21,9 +21,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       "/webjars/**"
   };
 
-  @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-  private String issuer;
-
   @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
   private String jwkSetUri;
 
@@ -34,6 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(AUTH_WHITELIST).permitAll()
         .antMatchers(HttpMethod.GET, "/v1/posts").permitAll()
         .antMatchers(HttpMethod.GET, "/v1/posts/**").permitAll()
+        .antMatchers(HttpMethod.GET, "/v1/categories").permitAll()
+        .antMatchers(HttpMethod.GET, "/v1/categories/**").permitAll()
         .anyRequest().authenticated()
         .and()
         .sessionManagement()

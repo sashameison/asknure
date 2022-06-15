@@ -39,10 +39,10 @@ public class PostController {
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public Page<PostDtoResponse> getPosts(
-      @RequestParam(name = "categories", required = false) List<String> tags,
+      @RequestParam(name = "categories", required = false) List<String> categories,
       @RequestParam(name = "searchParam", required = false) String searchParam,
       @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
-    return postService.findAll(pageable, searchParam, tags);
+    return postService.findAll(pageable, searchParam, categories);
   }
 
   @GetMapping("/{post-id}")
