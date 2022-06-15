@@ -14,4 +14,6 @@ public interface CategoryRepository extends MongoRepository<Category, String> {
   Page<Category> findCategoryBy(Pageable pageable);
 
   Optional<Category> findCategoryById(String id);
+
+  Optional<Category> findCategoryByName(String name);
 }
