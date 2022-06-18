@@ -103,7 +103,7 @@ public class PostService {
     AuthUtil.setAuthor(comment);
     updatePostById(comment, postId);
     var postDto = findById(postId);
-    notifyUserWithEmail(postDto.getTitle());
+    notifyUserWithEmail(postDto.getCreatedBy(), postDto.getTitle());
     return comment;
   }
 
@@ -125,9 +125,8 @@ public class PostService {
     mongoTemplate.updateFirst(query, push, Post.class);
   }
 
-  private void notifyUserWithEmail(String title) {
-    String email = AuthUtil.getEmail();
-    mailSenderService.sendSimpleMessage(buildMessageDto(email, title));
+  private void notifyUserWithEmail(String creator, String title) {
+    mailSenderService.sendSimpleMessage(buildMessageDto(creator, title));
   }
 
   private PostSearchParam buildParam(String searchParam, List<String> categories) {
