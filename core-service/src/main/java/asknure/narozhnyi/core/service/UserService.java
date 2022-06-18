@@ -34,6 +34,12 @@ public class UserService {
         .orElseThrow(NotFoundException::new);
   }
 
+  public UserDto findByName(String name) {
+    return userRepository.findUserByUsername(name)
+        .map(userMapper::toDto)
+        .orElseThrow(NotFoundException::new);
+  }
+
   public UserDto obtainNewUser() {
     var jwt = AuthUtil.getJwt();
     return userRepository.findUserByEmail(jwt.getClaimAsString("email"))
