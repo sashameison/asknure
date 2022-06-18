@@ -53,7 +53,7 @@ public class PostController {
 
   @GetMapping("/user")
   @ResponseStatus(HttpStatus.OK)
-  public Page<PostDto> findUserPosts(
+  public Page<PostDtoResponse> findUserPosts(
       @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
     return postService.findByCreator(pageable);
   }
