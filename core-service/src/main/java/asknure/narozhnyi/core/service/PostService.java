@@ -11,7 +11,6 @@ import asknure.narozhnyi.core.dto.PostCreateDto;
 import asknure.narozhnyi.core.dto.PostDto;
 import asknure.narozhnyi.core.dto.PostDtoResponse;
 import asknure.narozhnyi.core.dto.PostSearchParam;
-import asknure.narozhnyi.core.dto.UserDto;
 import asknure.narozhnyi.core.exceptions.BadRequest;
 import asknure.narozhnyi.core.exceptions.NotFoundException;
 import asknure.narozhnyi.core.mapper.CommentMapper;
@@ -78,10 +77,10 @@ public class PostService {
         .orElseThrow(NotFoundException::new);
   }
 
-  public Page<PostDto> findByCreator(Pageable pageable) {
+  public Page<PostDtoResponse> findByCreator(Pageable pageable) {
     var jwt = AuthUtil.getJwt();
     return postRepository.findPostByCreatedBy(pageable, jwt.getClaimAsString("name"))
-        .map(postMapper::toDto);
+        .map(postMapper::toResponseDto);
   }
 
   public void saveAttachment(String postId, MultipartFile multipartFile) {
