@@ -1,11 +1,12 @@
 package asknure.narozhnyi.core.service;
 
-import static asknure.narozhnyi.core.dto.PostDto.Fields.categories;
+import static asknure.narozhnyi.core.dto.PostDto.Fields.comments;
 
 import java.util.List;
 import java.util.Optional;
 
 import asknure.narozhnyi.core.dto.CommentCreateDto;
+import asknure.narozhnyi.core.dto.MessageDto;
 import asknure.narozhnyi.core.dto.PostCreateDto;
 import asknure.narozhnyi.core.dto.PostDto;
 import asknure.narozhnyi.core.dto.PostDtoResponse;
@@ -40,6 +41,7 @@ public class PostService {
   private final MongoTemplate mongoTemplate;
   private final PostMapper postMapper;
   private final CommentMapper commentMapper;
+  private final MailSenderService mailSenderService;
 
   public Page<PostDtoResponse> findAll(Pageable pageable, String searchParam, List<String> categories) {
     return postRepository.findPostBy(pageable, buildParam(searchParam, categories))
@@ -100,6 +102,8 @@ public class PostService {
   private Comment updateComment(String postId, Comment comment) {
     AuthUtil.setAuthor(comment);
     updatePostById(comment, postId);
+    var postDto = findById(postId);
+    notifyUserWithEmail(postDto.getTitle());
     return comment;
   }
 
@@ -116,15 +120,27 @@ public class PostService {
 
   private void updatePostById(Comment comment, String postId) {
     var query = Query.query(Criteria.where(ID).is(postId));
-    var push = new Update().push(categories, comment);
+    var push = new Update().push(comments, comment);
 
     mongoTemplate.updateFirst(query, push, Post.class);
+  }
+
+  private void notifyUserWithEmail(String title) {
+    String email = AuthUtil.getEmail();
+    mailSenderService.sendSimpleMessage(buildMessageDto(email, title));
   }
 
   private PostSearchParam buildParam(String searchParam, List<String> categories) {
     return PostSearchParam.builder()
         .searchParam(searchParam)
         .categories(categories)
+        .build();
+  }
+
+  private MessageDto buildMessageDto(String email, String title) {
+    return MessageDto.builder()
+        .title(title)
+        .receiver(email)
         .build();
   }
 }

@@ -6,6 +6,16 @@ spring:
     mongodb:
       uri: ${MONGO_DB:mongodb://localhost:27017/blog}
       auto-index-creation: true
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${USERNAME:noreplyasknure@gmail.com}
+    password: ${PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
 
   security:
     oauth2:
@@ -46,6 +56,9 @@ cloud:
 
 #bucket-name
 bucket-name: asknure-bucket
+message:
+  subject: ASK NURE notification.
+  text: Вам прийшов коментарь на ваш пост "%s"
 
 
 
