@@ -18,7 +18,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.MongoRegexCreator;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,13 +30,14 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
   @Override
   public Page<Post> findPostBy(Pageable pageable, PostSearchParam postSearchParam) {
     var query = new Query();
-    var count = mongoTemplate.count(query, Post.class);
     var criteria = buildCriteria(postSearchParam);
     if (isNotEmpty(criteria)) {
       query.addCriteria(new Criteria().andOperator(criteria.toArray(Criteria[]::new)));
     }
-    var posts = mongoTemplate.find(query.with(pageable), Post.class);
-    return PageableExecutionUtils.getPage(posts, pageable, () -> count);
+    query.with(pageable);
+    var count = mongoTemplate.count(query, Post.class);
+    var posts = mongoTemplate.find(query, Post.class);
+    return new PageImpl<>(posts, pageable, count);
   }
 
   public List<Criteria> buildCriteria(PostSearchParam postSearchParam) {
