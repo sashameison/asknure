@@ -11,6 +11,8 @@ import asknure.narozhnyi.core.dto.PostCreateDto;
 import asknure.narozhnyi.core.dto.PostDto;
 import asknure.narozhnyi.core.dto.PostDtoResponse;
 import asknure.narozhnyi.core.dto.PostSearchParam;
+import asknure.narozhnyi.core.dto.PostUpdateDto;
+import asknure.narozhnyi.core.dto.UserDto;
 import asknure.narozhnyi.core.exceptions.BadRequest;
 import asknure.narozhnyi.core.exceptions.NotFoundException;
 import asknure.narozhnyi.core.mapper.CommentMapper;
@@ -27,8 +29,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +66,20 @@ public class PostService {
         .map(postRepository::save)
         .map(postMapper::toDto)
         .orElseThrow(BadRequest::new);
+  }
+
+  public PostDto update(String postId, PostUpdateDto postDto) {
+    return postRepository.findPostById(postId)
+        .map(post -> {
+          Optional.ofNullable(postDto.getTitle())
+              .ifPresent(post::setTitle);
+          Optional.ofNullable(postDto.getText())
+              .ifPresent(post::setText);
+          return post;
+        })
+        .map(postRepository::save)
+        .map(postMapper::toDto)
+        .orElseThrow(NotFoundException::new);
   }
 
   public Comment saveComment(String postId, CommentCreateDto commentDto) {
