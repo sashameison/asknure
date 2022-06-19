@@ -9,6 +9,7 @@ import asknure.narozhnyi.core.dto.CommentCreateDto;
 import asknure.narozhnyi.core.dto.PostCreateDto;
 import asknure.narozhnyi.core.dto.PostDto;
 import asknure.narozhnyi.core.dto.PostDtoResponse;
+import asknure.narozhnyi.core.dto.PostUpdateDto;
 import asknure.narozhnyi.core.model.Comment;
 import asknure.narozhnyi.core.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,6 +64,11 @@ public class PostController {
   @ResponseStatus(HttpStatus.CREATED)
   public PostDto save(@RequestBody @Valid PostCreateDto postDto) {
     return postService.save(postDto);
+  }
+
+  @PutMapping("/{postId}")
+  public PostDto update(@PathVariable("postId") String postId, @RequestBody PostUpdateDto postUpdateDto) {
+    return postService.update(postId, postUpdateDto);
   }
 
   @PostMapping("/{post-id}")
