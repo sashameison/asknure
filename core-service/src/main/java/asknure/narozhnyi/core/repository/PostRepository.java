@@ -1,5 +1,6 @@
 package asknure.narozhnyi.core.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import asknure.narozhnyi.core.model.Post;
@@ -13,4 +14,6 @@ public interface PostRepository extends MongoRepository<Post, String>, PostCusto
   Optional<Post> findPostById(String id);
 
   Page<Post> findPostByCreatedBy(Pageable pageable, String createdBy);
+
+  List<Post> findPostByCommentsAuthor(String author);
 }
