@@ -15,5 +15,7 @@ public interface CategoryRepository extends MongoRepository<Category, String> {
 
   Optional<Category> findCategoryById(String id);
 
-  Optional<Category> findCategoryByName(String name);
+  Optional<Category> findCategoryByNameIgnoreCase(String name);
+
+  void deleteCategoryByName(String name);
 }

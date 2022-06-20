@@ -1,6 +1,5 @@
 package asknure.narozhnyi.core.service;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import asknure.narozhnyi.core.dto.CategoryCreateDto;
@@ -33,7 +32,8 @@ public class CategoryService {
   }
 
   public CategoryDto save(CategoryCreateDto dto) {
-    boolean isCategoryExists = categoryRepository.findCategoryByName(dto.getName()).isPresent();
+    boolean isCategoryExists = categoryRepository.findCategoryByNameIgnoreCase(dto.getName())
+        .isPresent();
     if (isCategoryExists) {
       throw new BadRequest();
     }
@@ -42,6 +42,10 @@ public class CategoryService {
         .map(categoryMapper::toEntity)
         .map(categoryRepository::save)
         .map(categoryMapper::toDto)
-        .orElseThrow(NotFoundException::new);
+        .orElseThrow(BadRequest::new);
+  }
+
+  public void deleteByName(String name) {
+    categoryRepository.deleteCategoryByName(name);
   }
 }
