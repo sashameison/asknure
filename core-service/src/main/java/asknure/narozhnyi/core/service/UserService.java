@@ -1,20 +1,26 @@
 package asknure.narozhnyi.core.service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import asknure.narozhnyi.core.dto.UserDto;
 import asknure.narozhnyi.core.dto.UserUpdateDto;
 import asknure.narozhnyi.core.exceptions.NotFoundException;
 import asknure.narozhnyi.core.mapper.UserMapper;
+import asknure.narozhnyi.core.model.Post;
 import asknure.narozhnyi.core.model.User;
 import asknure.narozhnyi.core.repository.PostRepository;
 import asknure.narozhnyi.core.repository.UserRepository;
 import asknure.narozhnyi.core.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -76,7 +82,16 @@ public class UserService {
   private void updatePostsCreator(User user, String newUsername) {
     var posts = postRepository.findPostByCreatedBy(Pageable.unpaged(), user.getUsername());
     posts.forEach(post -> post.setCreatedBy(newUsername));
-    postRepository.saveAll(posts);
+
+    var postByCommentsAuthor = postRepository.findPostByCommentsAuthor(user.getUsername());
+    postByCommentsAuthor.stream()
+        .map(Post::getComments)
+        .flatMap(List::stream)
+        .filter(comment -> user.getUsername().equals(comment.getAuthor()))
+        .forEach(comment -> comment.setAuthor(newUsername));
+    var postsToUpdate = CollectionUtils.union(posts, postByCommentsAuthor);
+
+    postRepository.saveAll(postsToUpdate);
     user.setUsername(newUsername);
   }
 

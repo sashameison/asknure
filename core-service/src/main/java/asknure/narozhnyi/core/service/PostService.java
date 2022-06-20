@@ -12,7 +12,6 @@ import asknure.narozhnyi.core.dto.PostDto;
 import asknure.narozhnyi.core.dto.PostDtoResponse;
 import asknure.narozhnyi.core.dto.PostSearchParam;
 import asknure.narozhnyi.core.dto.PostUpdateDto;
-import asknure.narozhnyi.core.dto.UserDto;
 import asknure.narozhnyi.core.exceptions.BadRequest;
 import asknure.narozhnyi.core.exceptions.NotFoundException;
 import asknure.narozhnyi.core.mapper.CommentMapper;
@@ -29,10 +28,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
