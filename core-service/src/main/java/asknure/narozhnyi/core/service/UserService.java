@@ -69,6 +69,10 @@ public class UserService {
         });
   }
 
+  public void deleteById(String id) {
+    userRepository.deleteById(id);
+  }
+
   private void updatePostsCreator(User user, String newUsername) {
     var posts = postRepository.findPostByCreatedBy(Pageable.unpaged(), user.getUsername());
     posts.forEach(post -> post.setCreatedBy(newUsername));
