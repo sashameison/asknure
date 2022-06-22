@@ -117,9 +117,9 @@ public class PostService {
   private Comment updateComment(String postId, Comment comment) {
     AuthUtil.setAuthor(comment);
     updatePostById(comment, postId);
-    var postDto = findById(postId);
-    var user = userService.findByName(postDto.getCreatedBy());
-    notifyUserWithEmail(user.getEmail(), postDto.getTitle());
+//    var postDto = findById(postId);
+//    var user = userService.findByName(postDto.getCreatedBy());
+//    notifyUserWithEmail(user.getEmail(), postDto.getTitle());
     return comment;
   }
 
