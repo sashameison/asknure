@@ -83,4 +83,15 @@ public class DatabaseChangeLog {
     update.set("text", "");
     mongockTemplate.updateMulti(Query.query(Criteria.where("_id").exists(true)), update, Post.class);
   }
+
+  @ChangeSet(order = "006", id = "updateUserId", author = "onarozhnyi")
+  public void updateUserId(MongockTemplate mongockTemplate) {
+    List<User> users = mongockTemplate.find(Query.query(Criteria.where("_id").exists(true)), User.class);
+
+    users.forEach(user -> {
+          Query query = Query.query(Criteria.where("createdBy").is(user.getCreatedBy()));
+          mongockTemplate.updateMulti(query, new Update().set("userId", user.getId()), Post.class);
+        }
+        );
+  }
 }

@@ -57,7 +57,7 @@ public class PostController {
   @ResponseStatus(HttpStatus.OK)
   public Page<PostDtoResponse> findUserPosts(
       @PageableDefault(sort = "createdAt", direction = DESC) Pageable pageable) {
-    return postService.findByCreator(pageable);
+    return postService.findByUserId(pageable);
   }
 
   @PostMapping
