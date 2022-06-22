@@ -19,6 +19,7 @@ import asknure.narozhnyi.core.mapper.PostMapper;
 import asknure.narozhnyi.core.model.Comment;
 import asknure.narozhnyi.core.model.Post;
 import asknure.narozhnyi.core.repository.PostRepository;
+import asknure.narozhnyi.core.repository.UserRepository;
 import asknure.narozhnyi.core.util.AuthUtil;
 import asknure.narozhnyi.core.util.ColorGenerator;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class PostService {
   private static final String ID = "_id";
   private final PostRepository postRepository;
   private final UserService userService;
+  private final UserRepository userRepository;
   private final S3Service s3Service;
   private final MongoTemplate mongoTemplate;
   private final PostMapper postMapper;
@@ -56,9 +58,12 @@ public class PostService {
   }
 
   public PostDto save(PostCreateDto postDto) {
+    var email = AuthUtil.getEmail();
+    var userDto = userService.findByEmail(email);
+
     return Optional.of(postDto)
         .map(postMapper::toEntity)
-        .map(this::updateColor)
+        .map(post -> this.updateColorAndUserId(post, userDto.getId()))
         .map(this::updateUserPostsCount)
         .map(postRepository::save)
         .map(postMapper::toDto)
@@ -92,9 +97,9 @@ public class PostService {
         .orElseThrow(NotFoundException::new);
   }
 
-  public Page<PostDtoResponse> findByCreator(Pageable pageable) {
-    var jwt = AuthUtil.getJwt();
-    return postRepository.findPostByCreatedBy(pageable, jwt.getClaimAsString("name"))
+  public Page<PostDtoResponse> findByUserId(Pageable pageable) {
+    var userDto = userService.findByEmail(AuthUtil.getEmail());
+    return postRepository.findPostByUserId(pageable, userDto.getId())
         .map(postMapper::toResponseDto);
   }
 
@@ -104,8 +109,9 @@ public class PostService {
         .orElseThrow(NotFoundException::new);
   }
 
-  private Post updateColor(Post post) {
+  private Post updateColorAndUserId(Post post, String userId) {
     post.setColor(ColorGenerator.generateColor());
+    post.setUserId(userId);
     return post;
   }
 

@@ -26,4 +26,5 @@ public class Post extends AuditingEntity {
   private List<String> files;
   private List<String> categories;
   private List<Comment> comments;
+  private String userId;
 }

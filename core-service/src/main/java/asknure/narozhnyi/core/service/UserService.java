@@ -1,9 +1,7 @@
 package asknure.narozhnyi.core.service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import asknure.narozhnyi.core.dto.UserDto;
 import asknure.narozhnyi.core.dto.UserUpdateDto;
@@ -20,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +39,12 @@ public class UserService {
 
   public UserDto findByName(String name) {
     return userRepository.findUserByUsername(name)
+        .map(userMapper::toDto)
+        .orElseThrow(NotFoundException::new);
+  }
+
+  public UserDto findByEmail(String email) {
+    return userRepository.findUserByEmail(email)
         .map(userMapper::toDto)
         .orElseThrow(NotFoundException::new);
   }
@@ -80,18 +83,16 @@ public class UserService {
   }
 
   private void updatePostsCreator(User user, String newUsername) {
-    var posts = postRepository.findPostByCreatedBy(Pageable.unpaged(), user.getUsername());
+    var posts = postRepository.findPostByUserId(Pageable.unpaged(), user.getId());
     posts.forEach(post -> post.setCreatedBy(newUsername));
-
+    postRepository.saveAll(posts);
     var postByCommentsAuthor = postRepository.findPostByCommentsAuthor(user.getUsername());
     postByCommentsAuthor.stream()
         .map(Post::getComments)
         .flatMap(List::stream)
         .filter(comment -> user.getUsername().equals(comment.getAuthor()))
         .forEach(comment -> comment.setAuthor(newUsername));
-    var postsToUpdate = CollectionUtils.union(posts, postByCommentsAuthor);
-
-    postRepository.saveAll(postsToUpdate);
+    postRepository.saveAll(postByCommentsAuthor);
     user.setUsername(newUsername);
   }
 

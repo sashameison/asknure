@@ -24,6 +24,7 @@ public class PostDto {
   private String createdBy;
   private String color;
   private String photo;
+  private String userId;
   @Builder.Default
   private List<String> files = new ArrayList<>();
   private Instant createdAt;
