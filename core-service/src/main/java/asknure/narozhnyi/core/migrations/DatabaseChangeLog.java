@@ -86,7 +86,7 @@ public class DatabaseChangeLog {
 
   @ChangeSet(order = "006", id = "updateUserId", author = "onarozhnyi")
   public void updateUserId(MongockTemplate mongockTemplate) {
-    List<User> users = mongockTemplate.find(Query.query(Criteria.where("_id").exists(true)), User.class);
+    var users = mongockTemplate.find(Query.query(Criteria.where("_id").exists(true)), User.class);
 
     users.forEach(user -> {
           Query query = Query.query(Criteria.where("createdBy").is(user.getCreatedBy()));

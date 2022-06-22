@@ -12,6 +12,7 @@ import asknure.narozhnyi.core.dto.PostDto;
 import asknure.narozhnyi.core.dto.PostDtoResponse;
 import asknure.narozhnyi.core.dto.PostSearchParam;
 import asknure.narozhnyi.core.dto.PostUpdateDto;
+import asknure.narozhnyi.core.dto.UserDto;
 import asknure.narozhnyi.core.exceptions.BadRequest;
 import asknure.narozhnyi.core.exceptions.NotFoundException;
 import asknure.narozhnyi.core.mapper.CommentMapper;
@@ -121,7 +122,9 @@ public class PostService {
   }
 
   private Comment updateComment(String postId, Comment comment) {
-    AuthUtil.setAuthor(comment);
+    var email = AuthUtil.getEmail();
+    var user = userService.findByEmail(email);
+    comment.setAuthor(user.getUsername());
     updatePostById(comment, postId);
 //    var postDto = findById(postId);
 //    var user = userService.findByName(postDto.getCreatedBy());
