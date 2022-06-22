@@ -127,7 +127,8 @@ public class PostService {
     comment.setAuthor(user.getUsername());
     updatePostById(comment, postId);
     var postDto = findById(postId);
-    notifyUserWithEmail(user.getEmail(), postDto.getTitle());
+    userRepository.findUserById(postDto.getUserId())
+            .ifPresent(receiver -> notifyUserWithEmail(receiver.getEmail(), postDto.getTitle()));
     return comment;
   }
 
