@@ -126,9 +126,8 @@ public class PostService {
     var user = userService.findByEmail(email);
     comment.setAuthor(user.getUsername());
     updatePostById(comment, postId);
-//    var postDto = findById(postId);
-//    var user = userService.findByName(postDto.getCreatedBy());
-//    notifyUserWithEmail(user.getEmail(), postDto.getTitle());
+    var postDto = findById(postId);
+    notifyUserWithEmail(user.getEmail(), postDto.getTitle());
     return comment;
   }
 
